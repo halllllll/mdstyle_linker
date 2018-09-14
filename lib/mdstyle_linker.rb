@@ -14,6 +14,11 @@ module MdstyleLinker
       # res.readはプレーンなstringで返ってくる
       # EOFがめんどくさいので最初に弾いちゃう
       title = res.read.gsub(/[\r\n\t]/, '').match(/<head.*>.*<title>(.+?)<\/title>.*<\/head>/)[1]
+
+      # titleのブラケットをエスケープする
+      # ちなみにrubyではputsとかでバックスラッシュを出力するとそのまま表示されてしまうらしい
+      table = {"[" => "\\[", "]" => "\\]"}
+      title.gsub!(/[\[\]]/, table)
       "[#{title}](#{url})"
     rescue StandardError => e
       puts e
